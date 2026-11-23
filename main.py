@@ -53,7 +53,9 @@ VIOLET = (168, 130, 220)
 MAGENTA = (232, 64, 160)
 
 # ---------------------------------------------------------------- 5x7 font
-# 7 rows of 5 pixels each; "#" = on. Copy is rendered in capitals only.
+# 7 rows of 5 pixels each; "#" = on. Capitals are full height;
+# lowercase letters sit on the x-height (rows 2-6) with descenders
+# (g, j, p, q, y) dropping to row 6, in the same stroke style.
 FONT = {
     "A": (" .###. ", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"),
     "B": ("####.", "#...#", "#...#", "####.", "#...#", "#...#", "####."),
@@ -108,6 +110,32 @@ FONT = {
     "'": ("..#..", "..#..", ".#...", ".....", ".....", ".....", "....."),
     '"': (".#.#.", ".#.#.", ".....", ".....", ".....", ".....", "....."),
     "$": ("..#..", ".####", "#.#.#", ".#.#.", "..##.", ".#.#.", "####."),
+    "a": (".....", ".....", ".###.", "....#", ".####", "#...#", ".###."),
+    "b": ("#....", "#....", "####.", "#...#", "#...#", "#...#", "####."),
+    "c": (".....", ".....", ".####", "#....", "#....", "#....", ".####"),
+    "d": ("....#", "....#", ".####", "#...#", "#...#", "#...#", ".####"),
+    "e": (".....", ".....", ".###.", "#...#", "#####", "#....", ".###."),
+    "f": ("..##.", ".#...", ".#...", "####.", ".#...", ".#...", ".#..."),
+    "g": (".....", ".....", ".####", "#...#", "#...#", ".####", "..##."),
+    "h": ("#....", "#....", "####.", "#...#", "#...#", "#...#", "#...#"),
+    "i": (".....", "..#..", ".....", ".##..", "..#..", "..#..", ".###."),
+    "j": (".....", "...#.", ".....", "..##.", "...#.", "...#.", "..#.."),
+    "k": ("#....", "#....", "#..#.", "#.#..", "##...", "#.#..", "#..#."),
+    "l": (".##..", "..#..", "..#..", "..#..", "..#..", "..#..", ".###."),
+    "m": (".....", ".....", "##.##", "#.#.#", "#.#.#", "#.#.#", "#.#.#"),
+    "n": (".....", ".....", "####.", "#...#", "#...#", "#...#", "#...#"),
+    "o": (".....", ".....", ".###.", "#...#", "#...#", "#...#", ".###."),
+    "p": (".....", ".....", "####.", "#...#", "#...#", "####.", "#...."),
+    "q": (".....", ".....", ".####", "#...#", "#...#", ".####", "....#"),
+    "r": (".....", ".....", "#.#..", "##...", "#....", "#....", "#...."),
+    "s": (".....", ".....", ".####", "#....", ".###.", "....#", "####."),
+    "t": (".#...", ".#...", "####.", ".#...", ".#...", ".#...", "..##."),
+    "u": (".....", ".....", "#...#", "#...#", "#...#", "#...#", ".###."),
+    "v": (".....", ".....", "#...#", "#...#", "#...#", ".#.#.", "..#.."),
+    "w": (".....", ".....", "#...#", "#.#.#", "#.#.#", "#.#.#", ".#.#."),
+    "x": (".....", ".....", "#...#", ".#.#.", "..#..", ".#.#.", "#...#"),
+    "y": (".....", ".....", "#...#", "#...#", "#...#", ".####", "....#"),
+    "z": (".....", ".....", "#####", "...#.", "..#..", ".#...", "#####"),
 }
 FONT = {k: tuple(r.strip()[:5].ljust(5, ".") for r in v)
         for k, v in FONT.items()}
@@ -225,7 +253,7 @@ class Canvas:
 
     def draw_text(self, x, y, s, scale, c):
         cx = x
-        for ch in s.upper():
+        for ch in s:
             g = FONT.get(ch, FONT[" "])
             for ry in range(7):
                 row = g[ry]
@@ -241,7 +269,7 @@ class Canvas:
 
     def wrap(self, s, scale, maxw):
         lines, cur = [], ""
-        for wd in s.upper().split():
+        for wd in s.split():
             trial = (cur + " " + wd).strip()
             if self.text_w(trial, scale) <= maxw:
                 cur = trial
@@ -268,7 +296,7 @@ def tw(s, scale, tracking=0):
 
 def draw_text2(c, x, y, s, scale, color, tracking=0, bold=False):
     cx = x
-    for ch in s.upper():
+    for ch in s:
         g = FONT.get(ch, FONT[" "])
         for ry in range(7):
             row = g[ry]
@@ -290,7 +318,7 @@ def text_center2(c, cx, y, s, scale, color, tracking=0, bold=False):
 
 def wrap2(s, scale, maxw, tracking=0):
     lines, cur = [], ""
-    for wd in s.upper().split():
+    for wd in s.split():
         trial = (cur + " " + wd).strip()
         if tw(trial, scale, tracking) <= maxw:
             cur = trial
@@ -509,49 +537,49 @@ BAND = {
 # (see NEWS.md). Story 1 is the hero; stories 2-7 are the grid cards.
 # Fields: place, region tag, headline, fact, stat, source, map position.
 STORIES = [
-    {"n": 1, "lon": 30.7, "lat": 36.9, "place": "ANTALYA, TURKIYE",
-     "region": "CLIMATE",
+    {"n": 1, "lon": 30.7, "lat": 36.9, "place": "Antalya, Turkiye",
+     "region": "Climate",
      "headline": "COP31 ENDS WITHOUT A DEAL",
-     "fact": "TWO DAYS OF OVERTIME, NO AGREEMENT. EU AND 130 PARTIES "
-             "REJECT THE TEXT.",
-     "stat": "NO DEAL AFTER 18 DAYS OF TALKS",
-     "source": "AP - REUTERS - BBC"},
-    {"n": 2, "lon": 20.1, "lat": 32.1, "place": "BENGHAZI, LIBYA",
-     "region": "CONFLICT",
+     "fact": "Two days of overtime. No agreement. EU and 130 parties "
+             "reject the text.",
+     "stat": "No deal after 18 days of talks",
+     "source": "AP - Reuters - BBC"},
+    {"n": 2, "lon": 20.1, "lat": 32.1, "place": "Benghazi, Libya",
+     "region": "Conflict",
      "headline": "RUSSIAN WARSHIP SINKS AFTER DRONE ATTACK",
-     "fact": "MERKURY SUNK IN PORT. DRONE ATTACK SUSPECTED.",
-     "stat": "WARSHIP SUNK IN PORT",
-     "source": "REUTERS - BBC"},
-    {"n": 3, "lon": 30.5, "lat": 50.5, "place": "DYMER, UKRAINE",
-     "region": "CONFLICT",
+     "fact": "Merkury sunk in port. Drone attack suspected.",
+     "stat": "Warship sunk in port",
+     "source": "Reuters - BBC"},
+    {"n": 3, "lon": 30.5, "lat": 50.5, "place": "Dymer, Ukraine",
+     "region": "Conflict",
      "headline": "STRIKE KILLS 10; BOY, 7, PULLED ALIVE",
-     "fact": "FLATS HIT NORTH OF KYIV. BOY, 7, PULLED ALIVE.",
-     "stat": "AT LEAST 10 KILLED",
-     "source": "BBC - REUTERS"},
-    {"n": 4, "lon": -77.0, "lat": 38.9, "place": "WASHINGTON, USA",
-     "region": "POLITICS",
+     "fact": "Flats hit north of Kyiv. Boy, 7, pulled alive.",
+     "stat": "At least 10 killed",
+     "source": "BBC - Reuters"},
+    {"n": 4, "lon": -77.0, "lat": 38.9, "place": "Washington, USA",
+     "region": "Politics",
      "headline": "DEMOCRATS WIN BIGGEST HOUSE WIN SINCE 1992",
-     "fact": "AT LEAST 258 SEATS. RECOUNT FLIP IN N.C.",
-     "stat": "258 SEATS AND COUNTING",
+     "fact": "At least 258 seats. Recount flip in N.C.",
+     "stat": "258 seats and counting",
      "source": "BBC - AP"},
-    {"n": 5, "lon": 139.7, "lat": 35.7, "place": "TOKYO, JAPAN",
-     "region": "MARKETS",
+    {"n": 5, "lon": 139.7, "lat": 35.7, "place": "Tokyo, Japan",
+     "region": "Markets",
      "headline": "NIKKEI DIVES 5% AS AI SELL-OFF SPREADS",
-     "fact": "NIKKEI -5.06%. HONG KONG AT 19-MO LOW.",
-     "stat": "NIKKEI -5.06%",
-     "source": "REUTERS - THE HINDU"},
-    {"n": 6, "lon": 56.5, "lat": 26.5, "place": "STRAIT OF HORMUZ",
-     "region": "MIDDLE EAST",
+     "fact": "Nikkei -5.06%. Hong Kong at 19-mo low.",
+     "stat": "Nikkei -5.06%",
+     "source": "Reuters - The Hindu"},
+    {"n": 6, "lon": 56.5, "lat": 26.5, "place": "Strait of Hormuz",
+     "region": "Middle East",
      "headline": "TANKERS ABLAZE AS TRUMP THREATENS IRAN",
-     "fact": "TWO TANKERS HIT MINES. TRUMP THREATENS IRAN.",
-     "stat": "2 TANKERS ON FIRE",
-     "source": "UKMTO - REUTERS"},
-    {"n": 7, "lon": 127.0, "lat": 37.5, "place": "SEOUL, SOUTH KOREA",
-     "region": "ECONOMY",
+     "fact": "Two tankers hit mines. Trump threatens Iran.",
+     "stat": "2 tankers on fire",
+     "source": "UKMTO - Reuters"},
+    {"n": 7, "lon": 127.0, "lat": 37.5, "place": "Seoul, South Korea",
+     "region": "Economy",
      "headline": "EXPORTS TOP $1 TRILLION FOR FIRST TIME",
-     "fact": "AI CHIPS DRIVE RECORD. FIRST TIME PAST $1TN.",
-     "stat": "$1 TRILLION IN EXPORTS",
-     "source": "KOREA CUSTOMS - YONHAP"},
+     "fact": "AI chips drive record. First time past $1tn.",
+     "stat": "$1 trillion in exports",
+     "source": "Korea Customs - Yonhap"},
 ]
 
 
@@ -712,7 +740,7 @@ def story_card(c, x, y, w, h, st):
     # stat highlight + source line at the foot of the card
     c.hline(x + 14, y + h - 28, w - 28, CARD_LINE, 1)
     draw_text2(c, x + 14, y + h - 22, st["stat"], 2, acd, bold=True)
-    draw_text2(c, x + 14, y + h - 8, "SOURCE: " + st["source"], 1,
+    draw_text2(c, x + 14, y + h - 8, "Source: " + st["source"], 1,
                (110, 105, 90), tracking=1)
 
 
@@ -759,7 +787,7 @@ def build():
         fy += 18
     c.hline(hx + 24, hy + 110, 620, GRAT, 1)
     draw_text2(c, hx + 24, hy + 116, st["stat"], 2, GOLD, bold=True)
-    draw_text2(c, hx + 660, hy + 116, "SOURCE: " + st["source"], 1,
+    draw_text2(c, hx + 660, hy + 116, "Source: " + st["source"], 1,
                MUTED, tracking=1)
 
     # ---- story cards: 2 rows x 3 columns (stories 2-7)
